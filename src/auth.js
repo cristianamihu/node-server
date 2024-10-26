@@ -17,7 +17,7 @@ export class UserStore {
     };
 }
 
-const userStore = new UserStore({ filename: './db/users.json', autoload: true });
+const userStore = new UserStore({ filename: '/home/iliut/uni/An3/Sem1/PDM/node-server/db/users.json', autoload: true });
 
 const createToken = (user) => {
     return jwt.sign({ username: user.username, _id: user._id }, jwtConfig.secret, { expiresIn: 60 * 60 * 60 });
@@ -32,11 +32,9 @@ authRouter.post('/signup', async (ctx) => {
         ctx.response.body = { token: createToken(user) };
         ctx.response.status = 201; // created
     } catch (err) {
-        ctx.response.body = { error: err.message };
+        ctx.response.body = { error: `${err.message} + test` };
         ctx.response.status = 400; // bad request
     }
-
-    await createUser(ctx.request.body, ctx.response)
 });
 
 authRouter.post('/login', async (ctx) => {

@@ -7,7 +7,7 @@ import jwt from 'koa-jwt';
 import cors from '@koa/cors';
 import { jwtConfig, timingLogger, exceptionHandler } from './utils.js';
 import { initWss } from './wss.js';
-import { itemRouter } from './item.js';
+import { taskRouter } from './tasks.js';
 import { authRouter } from './auth.js';
 
 const app = new Koa();
@@ -35,7 +35,7 @@ app.use(jwt(jwtConfig));
 // protected
 const protectedApiRouter = new Router({ prefix });
 protectedApiRouter
-    .use('/item', itemRouter.routes());
+    .use('/task', taskRouter.routes());
 app
     .use(protectedApiRouter.routes())
     .use(protectedApiRouter.allowedMethods());
