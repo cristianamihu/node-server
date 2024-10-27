@@ -1,10 +1,10 @@
 import Router from 'koa-router';
 import dataStore from 'nedb-promise';
-import {broadcast} from "./wss";
+import {broadcast} from "./wss.js";
 
 export class TaskStore {
-    constructor({fileName, autoload}) {
-        this.store = dataStore({fileName, autoload});
+    constructor({ filename, autoload }) {
+        this.store = dataStore({ filename, autoload });
     }
 
     async find(props){
@@ -16,11 +16,19 @@ export class TaskStore {
     }
 
     async insert(task) {
-        if (!task.name) { // validation
-            throw new Error('Missing task name property')
+        console.log('Inserting task:', task); // Log the task to be inserted
+        if (!task.name) {
+            throw new Error('Missing task name property');
         }
-        return this.store.insert(task);
-    };
+        try {
+            const result = await this.store.insert(task);
+            console.log('Task inserted successfully:', result); // Log the result
+            return result;
+        } catch (err) {
+            console.error('Error inserting task:', err); // Log the error
+            throw err; // Re-throw to handle it in the calling function
+        }
+    }
 
     async update(props, task) {
         return this.store.update(props, task);
@@ -31,7 +39,8 @@ export class TaskStore {
     }
 }
 
-const taskStore = new TaskStore({ filename: '/home/iliut/uni/An3/Sem1/PDM/node-server/db/tasks.json', autoload: true });
+const taskStore = new TaskStore({ filename: '/home/iliut/uni/An3/Sem1/PDM/node-server/db/tasks.json', autoload: true});
+console.log('TaskStore initialized with file:', taskStore.store);
 
 export const taskRouter = new Router();
 
@@ -59,16 +68,18 @@ taskRouter.get('/:id', async (ctx) => {
 
 const createTask = async (ctx, task, response) => {
     try {
-        const userId = ctx.state.user._id;
+        const userId = ctx.state.user._id; // Ensure this is set correctly
         task.userId = userId;
         response.body = await taskStore.insert(task);
         response.status = 201; // created
         broadcast(userId, { type: 'created', payload: task });
     } catch (err) {
+        console.error('Error creating task:', err);
         response.body = { message: err.message };
         response.status = 400; // bad request
     }
 };
+
 
 taskRouter.post('/', async ctx => await createTask(ctx, ctx.request.body, ctx.response));
 

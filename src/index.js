@@ -35,7 +35,7 @@ app.use(jwt(jwtConfig));
 // protected
 const protectedApiRouter = new Router({ prefix });
 protectedApiRouter
-    .use('/task', taskRouter.routes());
+    .use('/tasks', taskRouter.routes());
 app
     .use(protectedApiRouter.routes())
     .use(protectedApiRouter.allowedMethods());

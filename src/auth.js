@@ -18,6 +18,9 @@ export class UserStore {
 }
 
 const userStore = new UserStore({ filename: '/home/iliut/uni/An3/Sem1/PDM/node-server/db/users.json', autoload: true });
+console.log('userStore initialized with file:', userStore.store);
+
+
 
 const createToken = (user) => {
     return jwt.sign({ username: user.username, _id: user._id }, jwtConfig.secret, { expiresIn: 60 * 60 * 60 });
