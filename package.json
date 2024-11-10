@@ -1,20 +1,19 @@
 {
   "name": "backpack-koa",
   "version": "1.0.0",
-  "description": "",
+  "description": "A Koa-based backend project with WebSocket support",
+  "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon src"
+    "start": "nodemon src/index.js"
   },
-  "keywords": [],
+  "keywords": ["koa", "backend", "websocket", "jwt", "api"],
   "author": "ilazar",
-  "license": "",
+  "license": "MIT",
   "dependencies": {
     "@koa/cors": "^5.0.0",
     "koa": "^2.15.3",
     "koa-bodyparser": "^4.4.1",
-    "koa-convert": "^1.2.0",
-    "koa-cors": "^0.0.16",
     "koa-jwt": "^4.0.4",
     "koa-router": "^7.4.0",
     "nedb-promise": "^2.0.1",

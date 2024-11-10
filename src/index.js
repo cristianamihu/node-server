@@ -7,7 +7,7 @@ import jwt from 'koa-jwt';
 import cors from '@koa/cors';
 import { jwtConfig, timingLogger, exceptionHandler } from './utils.js';
 import { initWss } from './wss.js';
-import { taskRouter } from './tasks.js';
+import { bookRouter } from './books.js';
 import { authRouter } from './auth.js';
 
 const app = new Koa();
@@ -24,21 +24,15 @@ const prefix = '/api';
 
 // public
 const publicApiRouter = new Router({ prefix });
-publicApiRouter
-    .use('/auth', authRouter.routes());
-app
-    .use(publicApiRouter.routes())
-    .use(publicApiRouter.allowedMethods());
+publicApiRouter.use('/auth', authRouter.routes());
+app.use(publicApiRouter.routes()).use(publicApiRouter.allowedMethods());
 
 app.use(jwt(jwtConfig));
 
 // protected
 const protectedApiRouter = new Router({ prefix });
-protectedApiRouter
-    .use('/tasks', taskRouter.routes());
-app
-    .use(protectedApiRouter.routes())
-    .use(protectedApiRouter.allowedMethods());
+protectedApiRouter.use('/books', bookRouter.routes());
+app.use(protectedApiRouter.routes()).use(protectedApiRouter.allowedMethods());
 
 server.listen(3000);
 console.log('started on port 3000');
